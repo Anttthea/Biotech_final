@@ -20,6 +20,7 @@ public class Question {
 	/**
 	 * the string of input question, without question mark
 	 */
+	
 	private String questionString = null;
 
 	/**
