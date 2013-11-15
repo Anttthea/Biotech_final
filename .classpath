@@ -2,6 +2,16 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="E:/Eclipse Projects/workspace/BioFinalProject/stanford-postagger-2013-06-20/stanford-postagger-2013-06-20/stanford-postagger.jar"/>
+	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-postagger-2013-11-12/stanford-postagger.jar"/>
+	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-corenlp-full-2013-11-12/stanford-corenlp-3.3.0.jar"/>
+	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-corenlp-full-2013-11-12/ejml-0.23.jar"/>
+	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-corenlp-full-2013-11-12/joda-time-2.1-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-corenlp-full-2013-11-12/joda-time.jar"/>
+	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-corenlp-full-2013-11-12/jollyday-0.4.7-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-corenlp-full-2013-11-12/jollyday.jar"/>
+	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-corenlp-full-2013-11-12/stanford-corenlp-3.3.0-models.jar"/>
+	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-corenlp-full-2013-11-12/stanford-corenlp-3.3.0-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-corenlp-full-2013-11-12/stanford-corenlp-3.3.0-javadoc.jar"/>
+	<classpathentry kind="lib" path="/Users/liqihui/Documents/jaws-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
