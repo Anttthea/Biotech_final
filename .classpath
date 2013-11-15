@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-postagger-2013-11-12/stanford-postagger.jar"/>
 	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-corenlp-full-2013-11-12/stanford-corenlp-3.3.0.jar"/>
 	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-corenlp-full-2013-11-12/ejml-0.23.jar"/>
@@ -13,5 +14,14 @@
 	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-corenlp-full-2013-11-12/stanford-corenlp-3.3.0-sources.jar"/>
 	<classpathentry kind="lib" path="/Users/liqihui/Documents/stanford-corenlp-full-2013-11-12/stanford-corenlp-3.3.0-javadoc.jar"/>
 	<classpathentry kind="lib" path="/Users/liqihui/Documents/jaws-bin.jar"/>
+=======
+	<classpathentry kind="lib" path="D:/stanford-postagger-2013-06-20/stanford-postagger-3.2.0.jar"/>
+	<classpathentry kind="lib" path="D:/stanford-postagger-2013-06-20/stanford-postagger.jar"/>
+	<classpathentry kind="lib" path="C:/eclipse/Soumya/workspace/parser/lucene-4.5.1/analysis/common/lucene-analyzers-common-4.5.1.jar"/>
+	<classpathentry kind="lib" path="C:/eclipse/Soumya/workspace/parser/lucene-4.5.1/core/lucene-core-4.5.1.jar"/>
+	<classpathentry kind="lib" path="C:/eclipse/Soumya/workspace/parser/lucene-4.5.1/demo/lucene-demo-4.5.1.jar"/>
+	<classpathentry kind="lib" path="C:/eclipse/Soumya/workspace/parser/lucene-4.5.1/queryparser/lucene-queryparser-4.5.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Soumya Batra/Downloads/questionFiles/questionFiles/jaws-bin.jar"/>
+>>>>>>> 1f2c522a26e58e22175a081808ff88fd2d4af9b1
 	<classpathentry kind="output" path="bin"/>
 </classpath>

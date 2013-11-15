@@ -11,4 +11,8 @@ public class Token {
 	public String getText(){
 		return textString;
 	}
+	
+	public void setText(String s){
+		this.textString = s;
+	}
 }

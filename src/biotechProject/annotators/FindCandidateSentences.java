@@ -1,5 +1,7 @@
 package biotechProject.annotators;
 
+import indexer.SearchFiles;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,8 +22,8 @@ public class FindCandidateSentences {
 	private static BufferedReader br = null;
 
 	// Written by Soumya
-	public static ArrayList<Sentence> getCandidateSentences(String folder,
-			Question q) {
+	public static ArrayList<Sentence> getCandidateSentences(Question q)
+			throws Exception {
 
 		String line;
 		String space;
@@ -29,89 +31,90 @@ public class FindCandidateSentences {
 		double confidence = 0.0;
 
 		String body = "";
-
-		// Read all pre-processed documents in the folder
-		File fold = new File(folder);
-		File[] directory = fold.listFiles();
 		String temp = new String();
 
-		for (File file : directory) {
-			space = "";
-			body = "";
-			if (file.isFile()) {
-				try {
-					fr = new FileReader(file);
-					br = new BufferedReader(fr);
+		ArrayList<Token> verbs = q.getVerbList();
+        ArrayList<Token> entity = q.getNounEntityList();
 
-					while ((line = br.readLine()) != null) {
-						if (line.startsWith("<article-title>")) {
-							space = line.substring(15);
-							if ((i = line.indexOf("</article-title>")) != -1) {
-								temp = line;
-								line = br.readLine();
-							} else {
-								while ((i = line.indexOf("</article-title>")) == -1) {
-									line = br.readLine();
-									space += line;
-									temp = line;
-								}
-							}
-							space = space.substring(0, space.length() - 16);
+		String query = "";
+		
+	/*	for(Token t:verbs)
+			query += (" " + t.getText() + " OR");
+		
+		query = query.substring(0,query.length()-2); */
+		
+		query += "\"";
+		
+		for(Token t:entity)
+			query += (" " + t.getText());
+		
+		query += "\"";
 
-							findCandidates(candidates, space, q, 'T');
-							space = "";
-						}
 
-						else if (line.startsWith("<abstract>")) {
-							space = line.substring(10);
-							if ((i = line.indexOf("</abstract>")) != -1) {
-								temp = line;
-								line = br.readLine();
-							} else {
-								while ((i = line.indexOf("</abstract>")) == -1) {
-									line = br.readLine();
-									space += line;
-									temp = line;
-								}
-							}
-							space = space.substring(0, space.length() - 11);
+		// Only entity names must be added to the query since querying based on
+		// verb is useless
 
-							findCandidates(candidates, space, q, 'A');
-							space = "";
-							// break;
-						} else if (line.startsWith("<body>")) {
-							while (line.indexOf("</body>") == -1) {
-								body += line;
-								line = br.readLine();
-							}
-							break;
+		String[] docPaths = SearchFiles.paths(query);
+		
+
+		// Since the documents are obtained in ordered fashion based on number
+		// of hits, we find the candidate answers in the first 100 documents. If
+		// no result is found, we move to the next 100 and so on
+		int start = 0;
+		int end = Math.min(docPaths.length, 5);
+		for (int j = start; j < end; j++) {
+			String file = docPaths[j];
+			fr = new FileReader(file);
+			br = new BufferedReader(fr);
+
+			while ((line = br.readLine()) != null) {
+				if (line.startsWith("<article-title>")) {
+					space = line.substring(15);
+					if ((i = line.indexOf("</article-title>")) != -1) {
+						temp = line;
+						line = br.readLine();
+					} else {
+						while ((i = line.indexOf("</article-title>")) == -1) {
+							line = br.readLine();
+							space += line;
+							temp = line;
 						}
 					}
-					/*
-					 * if (candidates.size() == 0) getCandidateFromBody(); //
-					 * Call CanddiateSentence_Haodong. Pass BufferedReader
-					 * object br and confidence. Add candidates returned to
-					 * 'candidates'. ;
-					 */
-					if (candidates.size() > 0)
-						getCandidateFromBody(body, q);
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					space = space.substring(0, space.length() - 16);
+
+					findCandidates(candidates, space, q, 'T');
+					space = "";
 				}
 
-			}
-		}
+				else if (line.startsWith("<abstract>")) {
+					space = line.substring(10);
+					if ((i = line.indexOf("</abstract>")) != -1) {
+						temp = line;
+						line = br.readLine();
+					} else {
+						while ((i = line.indexOf("</abstract>")) == -1) {
+							line = br.readLine();
+							space += line;
+							temp = line;
+						}
+					}
+					space = space.substring(0, space.length() - 11);
 
-		try {
-			br.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+					findCandidates(candidates, space, q, 'A');
+					space = "";
+				}
+				// break; }
+				else if (line.startsWith("<body>")) {
+					while (line.indexOf("</body>") == -1) {
+						body += line;
+						line = br.readLine();
+					}
+					break;
+				}
+			}
+			getCandidateFromBody(body, q);
 		}
+		br.close();
 		return candidates;
 	}
 
@@ -119,7 +122,11 @@ public class FindCandidateSentences {
 			String find, Question q, char type) {
 		// TODO Auto-generated method stub
 
-		ArrayList<Token> tokens = q.getKeywordList();
+		//ArrayList<Token> tokens = q.getKeywordList();
+		
+		ArrayList<Token> tokens = q.getVerbList();
+		tokens.addAll(q.getNounEntityList());
+		
 		ArrayList<Integer> labels = new ArrayList<Integer>();
 		boolean subject = q.getAskSubject();
 		String perfect = "";
