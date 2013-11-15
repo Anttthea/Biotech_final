@@ -1,10 +1,9 @@
 package biotechProject.annotators;
 
-import java.util.InputMismatchException;
-
+import java.util.ArrayList;
 import java.util.Scanner;
-
 import biotechProject.types.Question;
+import biotechProject.types.Token;
 
 public class QuestionAnalysis_Claire {
 
@@ -13,8 +12,11 @@ public class QuestionAnalysis_Claire {
 		Scanner sc = new Scanner(System.in);
 
 		String inputLine = sc.nextLine();
-
-		inputLine = inputLine.substring(0, inputLine.length() - 1);
+		
+		if(inputLine.charAt(inputLine.length()-1) == '?' ||
+				inputLine.charAt(inputLine.length()-1) == '.' ||
+				inputLine.charAt(inputLine.length()-1) == '!' )
+			inputLine = inputLine.substring(0, inputLine.length() - 1);
 
 		Question aQuestion = new Question(inputLine);
 
@@ -23,11 +25,31 @@ public class QuestionAnalysis_Claire {
 	}
 
 	public static void printQuestionForTest(Question q) {
+		System.out.println("print tokens in keywordList one by one:");
+		for(Token word:q.getKeywordList()){
+			System.out.print(word.getText());
+			System.out.print(" ");
+		}
+		System.out.println("\n");
+		
+		System.out.println("\n print tokens in verbList one by one");
+		for(Token word:q.getVerbList()){
+			System.out.print(word.getText());
+			System.out.print(" ");
+		}
+		System.out.println("\n");
 
-		System.out.println(q.getKeywordList().get(0).getText());
-
-		System.out.println(q.getKeywordList().get(1).getText());
-
+		System.out.println("\n print each word in the nounEntityList one by one ");
+			for(Token word:q.getNounEntityList()){
+				System.out.print(word.getText());
+				System.out.print(" ");
+			}
+			System.out.println("\n");
+		
+		
+		
 	}
+	
+	
 
 }
