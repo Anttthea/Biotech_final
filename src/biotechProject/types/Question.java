@@ -173,7 +173,7 @@ public class Question {
 		ArrayList<String> trimedSynonyms = new ArrayList<String>();
 
 		System.setProperty("wordnet.database.dir",
-				"C:/Program Files (x86)/WordNet/2.1/dict");
+				"/Users/Cambi/Plugins/WordNet-3.0/dict");
 
 		String word = inputWord;
 		Synset[] synsets = database.getSynsets(word, SynsetType.VERB);
@@ -201,7 +201,7 @@ public class Question {
 	
 	public static void getVerbSynonyms2(String inputWord) {
 		System.setProperty("wordnet.database.dir",
-				"C:/Program Files (x86)/WordNet/2.1/dict");
+				"/Users/Cambi/Plugins/WordNet-3.0/dict");
 		
 		NounSynset nounSynset; 
 		NounSynset[] hyponyms; 
@@ -218,7 +218,7 @@ public class Question {
 	
 	public static void getVerbSynonyms3(String inputWord) {
 		System.setProperty("wordnet.database.dir",
-				"C:/Program Files (x86)/WordNet/2.1/dict");
+				"/Users/Cambi/Plugins/WordNet-3.0/dict");
 		
 		VerbSynset verbSynset; 
 		VerbSynset[] hyponyms; 
