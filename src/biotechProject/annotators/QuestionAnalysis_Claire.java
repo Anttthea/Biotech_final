@@ -21,6 +21,7 @@ public class QuestionAnalysis_Claire {
 		Question aQuestion = new Question(inputLine);
 
 		return aQuestion;
+		
 
 	}
 

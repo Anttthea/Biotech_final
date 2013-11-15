@@ -17,7 +17,7 @@ public class Pipeline {
 		
 		QuestionAnalysis_Claire.printQuestionForTest(quest);
 		
-		ArrayList<Sentence> candidates = FindCandidateSentences.getCandidateSentences(quest);
+
 		for(Sentence st : candidates){
 			System.out.println(st.getTextString());
 			AnswerAnalysis_Anna.setCandidateAnswers(st.getTextString(), quest);
