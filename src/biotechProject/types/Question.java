@@ -59,8 +59,7 @@ public class Question {
 		String[] questionWord = inputStr.split("\\s");
 
 		// question format is "What does [ENTITY] [VERB]"
-		if (questionWord[1].equals("does") || questionWord[1].equals("do")) {
-
+		if (questionWord[1].equals("does") || questionWord[1].equals("do")){
 			if (questionWord.length < 4)
 				System.out.println("Not enough length of input question!");
 
@@ -134,8 +133,6 @@ public class Question {
 				}
 			}
 
-<<<<<<< HEAD
-=======
 		}
 	}
 
@@ -236,100 +233,6 @@ public class Question {
 	}
 
 
-	public static boolean isStopWord(String word) throws IOException {
-		HashSet<String> stopWordsList = new HashSet<String>();
-		URL swurl = Answer.class.getResource("stopwords.txt");
-		if (swurl == null)
-			throw new IllegalArgumentException("Error opening stopwords.txt");
-		BufferedReader br = new BufferedReader(new InputStreamReader(
-				swurl.openStream()));
-		String swLine;
-		while ((swLine = br.readLine()) != null)
-			stopWordsList.add(swLine);
-		if (stopWordsList.contains(word))
-			return true;
-		return false;
-	}
-
-	public static void getVerbForms() {
-		ArrayList<Token> verbForms = new ArrayList<Token>();
-
-		Morphology id = Morphology.getInstance();
-
-		String[] arr = id.getBaseFormCandidates("apples", SynsetType.VERB);
-
-		System.out.println(arr.length);
-
-		for (String a : arr)
-			System.out.println(a);
-		// return verbForms;
-
-	}
-
-	
-
-	public static ArrayList<String> getVerbSynonyms(String inputWord) {
-		ArrayList<String> synonyms = new ArrayList<String>();
-		ArrayList<String> trimedSynonyms = new ArrayList<String>();
-
-		System.setProperty("wordnet.database.dir",
-				"/Users/liqihui/Documents/WordNet-3.0/dict");
-
-		String word = inputWord;
-		Synset[] synsets = database.getSynsets(word, SynsetType.VERB);
-		if (synsets.length > 0) {
-			for (int i = 0; i < synsets.length; i++) {
-				String[] wordForms = synsets[i].getWordForms();
-				
-				
-				for (int j = 0; j < wordForms.length; j++) {
-					if (!synonyms.contains(wordForms[j])) {
-						synonyms.add(wordForms[j]);
-					}
-				}
-			}
-			int outputlength = synonyms.size()>=6?6:synonyms.size();
-			for(int i=0; i<outputlength; i++){
-				//System.out.println(synonyms.get(i));
-				trimedSynonyms.add(synonyms.get(i)); 
-			}
-		}
-		return trimedSynonyms;
-		
-		
-	}
-	
-	public static void getVerbSynonyms2(String inputWord) {
-		System.setProperty("wordnet.database.dir",
-				"/Users/liqihui/Documents/WordNet-3.0/dict");
-		
-		NounSynset nounSynset; 
-		NounSynset[] hyponyms; 
-
-		Synset[] synsets = database.getSynsets(inputWord, SynsetType.NOUN); 
-		for (int i = 0; i < synsets.length; i++) { 
-		   nounSynset = (NounSynset)(synsets[i]); 
-		   hyponyms = nounSynset.getHyponyms(); 
-		    System.err.println(nounSynset.getWordForms()[0] + 
-		           ": " + nounSynset.getDefinition() + ") has " + hyponyms.length + " hyponyms"); 
-		}
-		
-	}
-	
-	public static void getVerbSynonyms3(String inputWord) {
-		System.setProperty("wordnet.database.dir",
-				"/Users/liqihui/Documents/WordNet-3.0/dict");
-		
-		VerbSynset verbSynset; 
-		VerbSynset[] hyponyms; 
-
-		Synset[] synsets = database.getSynsets(inputWord, SynsetType.VERB); 
-		for (int i = 0; i < synsets.length; i++) { 
-		   verbSynset = (VerbSynset)(synsets[i]); 
-		   System.out.println(verbSynset.getWordForms()[1]); 
-		}
-		
-	}
 
 
 	public String getQuestionString() {
