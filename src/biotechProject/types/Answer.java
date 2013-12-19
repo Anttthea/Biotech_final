@@ -1,6 +1,6 @@
 package biotechProject.types;
 
-public class Answer {
+public class Answer implements Comparable<Answer>{
 private String ans = null;
 private double score = 0;
 public Answer(){
@@ -24,6 +24,12 @@ public String GetText(){
 }
 public double GetScore(){
 	return score;
+}
+public int compareTo(Answer ans)
+{
+     if(score - ans.score >= 0)
+          return -1;
+     else return 1;
 }
 }
 

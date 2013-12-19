@@ -42,6 +42,7 @@ import org.apache.lucene.util.Version;
 /** Simple command-line based search demo. */
 public class SearchFiles {
 
+	public static int numTotalHits;
   private SearchFiles() {}
 
   /** Static method that reads the indices from the query and returns orderedlist of candidate documents 
@@ -164,7 +165,7 @@ return paths;
     TopDocs results = searcher.search(query, 5 * hitsPerPage);
     ScoreDoc[] hits = results.scoreDocs;
     
-    int numTotalHits = results.totalHits;
+    numTotalHits = results.totalHits;
     System.out.println(numTotalHits + " total matching documents");
 
     

@@ -9,18 +9,26 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import simplenlg.features.Feature;
+import simplenlg.features.Form;
+import simplenlg.features.Tense;
+import simplenlg.framework.InflectedWordElement;
+import simplenlg.framework.LexicalCategory;
+import simplenlg.framework.NLGFactory;
+import simplenlg.framework.WordElement;
+import simplenlg.lexicon.Lexicon;
+import simplenlg.phrasespec.SPhraseSpec;
+import simplenlg.realiser.english.Realiser;
 import edu.smu.tspell.wordnet.*;
-import edu.smu.tspell.wordnet.impl.file.Morphology;
 import edu.smu.tspell.wordnet.impl.file.*;
 
 public class Question {
-	
+
 	public static WordNetDatabase database = WordNetDatabase.getFileInstance();
 
 	/**
 	 * the string of input question, without question mark
 	 */
-	
 	private String questionString = null;
 
 	/**
@@ -42,6 +50,10 @@ public class Question {
 	 * of the words in the ArrayList
 	 */
 	private ArrayList<Token> nounEntityList = new ArrayList<Token>();
+	
+	private ArrayList<Token> nounEntityList2 = new ArrayList<Token>();
+	
+	public ArrayList<Token> queries = new ArrayList<Token>();
 
 	/**
 	 * When input question is "What [VERB] [ENTITY]", then askSubject is true.
@@ -59,21 +71,24 @@ public class Question {
 		String[] questionWord = inputStr.split("\\s");
 
 		// question format is "What does [ENTITY] [VERB]"
-		if (questionWord[1].equals("does") || questionWord[1].equals("do")){
+		if (questionWord[1].equals("does") || questionWord[1].equals("do")) {
+
 			if (questionWord.length < 4)
 				System.out.println("Not enough length of input question!");
 
 			this.askSubject = false;
-
+String tok = "";
 			// nounEntityList
 			for (int i = 2; i < questionWord.length - 1; i++) {
 				try {
 					if (!(isStopWord(questionWord[i]))) {
+						tok = tok + questionWord[i] + " ";
 						Token nameEntityToken = new Token(questionWord[i]);
 						this.keywordList.add(nameEntityToken);
 
-						//ArrayList<Token> allSynonymsOfOneWord = new ArrayList<Token>();
-						//allSynonymsOfOneWord.add(nameEntityToken);
+						// ArrayList<Token> allSynonymsOfOneWord = new
+						// ArrayList<Token>();
+						// allSynonymsOfOneWord.add(nameEntityToken);
 						// TODO ADD ALL SYNONYMS OF ONE WORD IN THE NAME ENTITY
 						// IN ONE ARRAYLIST
 
@@ -83,18 +98,24 @@ public class Question {
 					e.printStackTrace();
 				}
 			}
+			if(!(tok.equals(""))){
+				this.keywordList.add(new Token(tok));
+				this.nounEntityList2.add(new Token(tok));
+				}
 
 			// verbList
 			String verbText = questionWord[questionWord.length - 1];
 			this.keywordList.add(new Token(verbText));
 			this.verbList.add(new Token(verbText));
+			this.queries.addAll(getVerbForms2(verbText));
 			ArrayList<String> verbSynonyms = getVerbSynonyms(questionWord[questionWord.length - 1]);
-			for(String word:verbSynonyms){
-				if(!word.equals(questionWord[questionWord.length - 1]))
+			for (String word : verbSynonyms) {
+				if (!word.equals(questionWord[questionWord.length - 1])) {
 					this.verbList.add(new Token(word));
+					this.queries.addAll(getVerbForms2(word));
+				}
 			}
-			
-			
+
 		}
 
 		// question format is "What [VERB] [ENTITY]"
@@ -103,26 +124,18 @@ public class Question {
 				System.out.println("Not enough length of input question!");
 
 			this.askSubject = true;
-
-			// verbList
-			this.keywordList.add(new Token(questionWord[1]));
-			this.verbList.add(new Token(questionWord[1]));
-			ArrayList<String> verbSynonyms = getVerbSynonyms(questionWord[1]);
-			for(String word:verbSynonyms){
-				if(!word.equals(questionWord[1]))
-					this.verbList.add(new Token(word));
-			}
-			
-			
+String tok = "";
 			// nounEntityList
 			for (int i = 2; i < questionWord.length; i++) {
 				try {
 					if (!(isStopWord(questionWord[i]))) {
+						tok = tok + questionWord[i] + " ";
 						Token nameEntityToken = new Token(questionWord[i]);
 						this.keywordList.add(nameEntityToken);
 
-						//ArrayList<Token> allSynonymsOfOneWord = new ArrayList<Token>();
-						//allSynonymsOfOneWord.add(nameEntityToken);
+						// ArrayList<Token> allSynonymsOfOneWord = new
+						// ArrayList<Token>();
+						// allSynonymsOfOneWord.add(nameEntityToken);
 						// TODO ADD ALL SYNONYMS OF ONE WORD IN THE NAME ENTITY
 						// IN ONE ARRAYLIST
 
@@ -130,6 +143,22 @@ public class Question {
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
+				}
+			}
+			if(!(tok.equals(""))){
+			this.keywordList.add(new Token(tok));
+			this.nounEntityList2.add(new Token(tok));
+			}
+			// verbList
+			String verbText = questionWord[1];
+			this.keywordList.add(new Token(verbText));
+			this.verbList.add(new Token(verbText));
+			this.queries.addAll(getVerbForms2(verbText));
+			ArrayList<String> verbSynonyms = getVerbSynonyms(verbText);
+			for (String word : verbSynonyms) {
+				if (!word.equals(questionWord[1])) {
+					this.verbList.add(new Token(word));
+					this.queries.addAll(getVerbForms2(word));
 				}
 			}
 
@@ -166,74 +195,121 @@ public class Question {
 
 	}
 
-	
-
 	public static ArrayList<String> getVerbSynonyms(String inputWord) {
 		ArrayList<String> synonyms = new ArrayList<String>();
 		ArrayList<String> trimedSynonyms = new ArrayList<String>();
 
 		System.setProperty("wordnet.database.dir",
-				"/Users/Cambi/Plugins/WordNet-3.0/dict");
+				"C:/Program Files (x86)/WordNet/2.1/dict");
 
 		String word = inputWord;
 		Synset[] synsets = database.getSynsets(word, SynsetType.VERB);
 		if (synsets.length > 0) {
 			for (int i = 0; i < synsets.length; i++) {
 				String[] wordForms = synsets[i].getWordForms();
-				
-				
+
 				for (int j = 0; j < wordForms.length; j++) {
 					if (!synonyms.contains(wordForms[j])) {
 						synonyms.add(wordForms[j]);
 					}
 				}
 			}
-			int outputlength = synonyms.size()>=6?6:synonyms.size();
-			for(int i=0; i<outputlength; i++){
-				//System.out.println(synonyms.get(i));
-				trimedSynonyms.add(synonyms.get(i)); 
+			int outputlength = synonyms.size() >= 6 ? 6 : synonyms.size();
+			for (int i = 0; i < outputlength; i++) {
+				// System.out.println(synonyms.get(i));
+				trimedSynonyms.add(synonyms.get(i));
 			}
-
 		}
 		return trimedSynonyms;
-		
-		
+
 	}
-	
+
 	public static void getVerbSynonyms2(String inputWord) {
 		System.setProperty("wordnet.database.dir",
-				"/Users/Cambi/Plugins/WordNet-3.0/dict");
-		
-		NounSynset nounSynset; 
-		NounSynset[] hyponyms; 
+				"/usr/local/WordNet-3.0/dict");
 
-		Synset[] synsets = database.getSynsets(inputWord, SynsetType.NOUN); 
-		for (int i = 0; i < synsets.length; i++) { 
-		   nounSynset = (NounSynset)(synsets[i]); 
-		   hyponyms = nounSynset.getHyponyms(); 
-		    System.err.println(nounSynset.getWordForms()[0] + 
-		           ": " + nounSynset.getDefinition() + ") has " + hyponyms.length + " hyponyms"); 
+		NounSynset nounSynset;
+		NounSynset[] hyponyms;
+
+		Synset[] synsets = database.getSynsets(inputWord, SynsetType.NOUN);
+		for (int i = 0; i < synsets.length; i++) {
+			nounSynset = (NounSynset) (synsets[i]);
+			hyponyms = nounSynset.getHyponyms();
+			System.err.println(nounSynset.getWordForms()[0] + ": "
+					+ nounSynset.getDefinition() + ") has " + hyponyms.length
+					+ " hyponyms");
 		}
-		
+
 	}
-	
+
 	public static void getVerbSynonyms3(String inputWord) {
 		System.setProperty("wordnet.database.dir",
-				"/Users/Cambi/Plugins/WordNet-3.0/dict");
-		
-		VerbSynset verbSynset; 
-		VerbSynset[] hyponyms; 
+				"/usr/local/WordNet-3.0/dict");
 
-		Synset[] synsets = database.getSynsets(inputWord, SynsetType.VERB); 
-		for (int i = 0; i < synsets.length; i++) { 
-		   verbSynset = (VerbSynset)(synsets[i]); 
-		   System.out.println(verbSynset.getWordForms()[1]); 
+		VerbSynset verbSynset;
+		VerbSynset[] hyponyms;
+
+		Synset[] synsets = database.getSynsets(inputWord, SynsetType.VERB);
+		for (int i = 0; i < synsets.length; i++) {
+			verbSynset = (VerbSynset) (synsets[i]);
+			System.out.println(verbSynset.getWordForms()[1]);
 		}
-		
+
 	}
 
+	public ArrayList<Token> getVerbForms2(String verb) {
 
+		ArrayList<Token> forms = new ArrayList<Token>();
 
+		Lexicon lexicon = Lexicon.getDefaultLexicon();
+		NLGFactory nlgFactory = new NLGFactory(lexicon);
+		Realiser realiser = new Realiser(lexicon);
+		String s = "";
+		for (Token ne : nounEntityList2) {
+			SPhraseSpec p = nlgFactory.createClause();
+
+			p.setVerb(verb);
+			if (askSubject) {
+				p.setObject(ne.getText());
+			} else {
+				p.setSubject(ne.getText());
+			}
+
+			p.setTense(Tense.FUTURE);
+			// s = s + realiser.realiseSentence(p);System.out.println(s);
+			forms.add(new Token(realiser.realiseSentence(p)));
+			p.setTense(Tense.PAST);
+			forms.add(new Token(realiser.realiseSentence(p)));
+			p.setTense(Tense.PRESENT);
+			forms.add(new Token(realiser.realiseSentence(p)));
+			p.setFeature(Feature.FORM, Form.GERUND);
+			forms.add(new Token(realiser.realiseSentence(p)));
+			p.setFeature(Feature.FORM, Form.IMPERATIVE);
+			forms.add(new Token(realiser.realiseSentence(p)));
+			p.setFeature(Feature.FORM, Form.INFINITIVE);
+			forms.add(new Token(realiser.realiseSentence(p)));
+			p.setFeature(Feature.FORM, Form.NORMAL);
+			forms.add(new Token(realiser.realiseSentence(p)));
+			p.setFeature(Feature.FORM, Form.PAST_PARTICIPLE);
+			forms.add(new Token(realiser.realiseSentence(p)));
+			p.setFeature(Feature.FORM, Form.PRESENT_PARTICIPLE);
+			forms.add(new Token(realiser.realiseSentence(p)));
+
+		}
+		/*
+		 * String t = new String();
+		 * 
+		 * if(verb.endsWith("s")) { if(verb.endsWith("es")) t =
+		 * verb.substring(0,verb.length()-2); else t =
+		 * verb.substring(0,verb.length()-1); forms.add(new Token(t+"ing"));
+		 * forms.add(new Token(t+"ed")); forms.add(new Token(t)); forms.add(new
+		 * Token("has " + t + "ed")); forms.add(new Token("have " + t + "ed"));
+		 * forms.add(new Token("having " + t + "ed")); forms.add(new Token(t +
+		 * "ed by")); forms.add(new Token("been" + t + "ed")); }
+		 */
+
+		return forms;
+	}
 
 	public String getQuestionString() {
 		return this.questionString;

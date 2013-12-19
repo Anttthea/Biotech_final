@@ -15,13 +15,14 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 public class Processor {
 
-  private static String FILEPATH = "/Users/Cambi/Documents/Program/EclipseWorkspace/JessicaWhiteWorkfolder";
+  private static String FILEPATH = "C:/Users/Soumya Batra/Downloads/Preprocessing";
 
   static int fileCount = 0;
 
   public static void main(String[] args) throws SAXException, IOException {
     //listf("/Users/Cambi/Documents/Program/EclipseWorkspace/JessicaWhiteWorkfolder/SourceNXML/Ecol_Entomol");
-    listf(FILEPATH + "/SourceNXML");
+  //  listf(FILEPATH + "/SourceNXML");
+	  listf(FILEPATH + "/SourceNXML/articles.O-Z");
     
 
   }
@@ -54,7 +55,7 @@ public class Processor {
         FileReader r = new FileReader(file.getPath());
 
         
-        String outputFileName = FILEPATH + "/Parsedtxt"+file.getPath().substring(FILEPATH.length() + 11, file.getPath().length()-5) + ".txt";
+        String outputFileName = FILEPATH + "/Parsedtxt/"+file.getPath().substring(FILEPATH.length() + 11, file.getPath().length()-5) + ".txt";
         if (fileCount % 100 == 0) System.out.println(fileCount + " file, "+ outputFileName);
         handler.setOutputFileName(outputFileName);
        

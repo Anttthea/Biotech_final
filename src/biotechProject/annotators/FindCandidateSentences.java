@@ -25,16 +25,19 @@ public class FindCandidateSentences {
 	public static ArrayList<Sentence> getCandidateSentences(Question q)
 			throws Exception {
 
-		String line;
-		String space;
+		candidates.clear();
+		String line = "";
+		String space = "";
 		int i;
 		double confidence = 0.0;
 
 		String body = "";
 		String temp = new String();
 
-		ArrayList<Token> verbs = q.getVerbList();
-        ArrayList<Token> entity = q.getNounEntityList();
+		ArrayList<Token> verbs = new ArrayList<Token>();
+		verbs = q.getVerbList();
+        ArrayList<Token> entity = new ArrayList<Token>();
+        entity = q.getNounEntityList();
 
 		String query = "";
 		
@@ -113,8 +116,9 @@ public class FindCandidateSentences {
 				}
 			}
 			getCandidateFromBody(body, q);
+			br.close();
 		}
-		br.close();
+		
 		return candidates;
 	}
 

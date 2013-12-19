@@ -7,11 +7,11 @@ import biotechProject.types.Token;
 
 public class QuestionAnalysis_Claire {
 
-	public static Question userInput2Question() {
+	public static Question userInput2Question(String qString) {
 
-		Scanner sc = new Scanner(System.in);
+		//Scanner sc = new Scanner(System.in);
 
-		String inputLine = sc.nextLine();
+		String inputLine = qString;
 		
 		if(inputLine.charAt(inputLine.length()-1) == '?' ||
 				inputLine.charAt(inputLine.length()-1) == '.' ||
@@ -21,7 +21,6 @@ public class QuestionAnalysis_Claire {
 		Question aQuestion = new Question(inputLine);
 
 		return aQuestion;
-		
 
 	}
 

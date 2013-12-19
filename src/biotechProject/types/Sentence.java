@@ -2,10 +2,11 @@
 package biotechProject.types;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class Sentence {
+public class Sentence implements Comparator<Sentence>, Comparable<Sentence> {
 	ArrayList<Token> tokenList;
 	private double sentenceScore;
 	private String textString;
@@ -36,5 +37,33 @@ public class Sentence {
 
 	public ArrayList<Token> getTokenList() {
 		return tokenList;
+	}
+
+	@Override
+	public int compareTo(Sentence o) {
+		// TODO Auto-generated method stub
+		if (this.sentenceScore > o.sentenceScore) {
+			return -1;
+		}
+		else if (this.sentenceScore == o.sentenceScore) {
+			return 0;
+		}
+		else {
+			return 1;
+		}
+	}
+
+	@Override
+	public int compare(Sentence o1, Sentence o2) {
+		// TODO Auto-generated method stub
+		if (o1.getSentenceScore()>o2.getSentenceScore()) {
+			return 1;
+		}
+		else if (o1.getSentenceScore() == o2.getSentenceScore()) {
+			return 0;
+		}
+		else {
+			return -1;
+		}
 	}
 }
